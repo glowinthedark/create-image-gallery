@@ -976,7 +976,7 @@ if __name__ == "__main__":
     parser.add_argument('--thumbs-dir', '-t',
                         type=Path,
                         default=Path(THUMBS_DIR),
-                        help=f'Thumnails folder, by default {THUMBS_DIR}')
+                        help=f'Thumbnails folder, by default {THUMBS_DIR}')
     parser.add_argument('--no-thumbnails',
                         default=False,
                         action='store_true',
