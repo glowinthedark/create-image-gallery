@@ -218,7 +218,8 @@ def collect_media_assets(args) -> list[Asset]:
 
                     if exif_time:
                         created_date = datetime.strptime(exif_time, "%Y:%m:%d %H:%M:%S")
-                        print(f'🌅 EXIF create date: {created_date}')
+                        if args.verbose:
+                            print(f'🌅 EXIF create date: {created_date}')
 
                     exif_make = exif.get('Make') or ''
                     exif_model = exif.get('Model') or ''
@@ -573,20 +574,7 @@ def generate_gallery_html(html_data, args:object):
                     hideModal();
                     break;
                 case 37: // left
-                    if (v){
-                        if (!v.paused) {
-                            v.pause();
-                            v.currentTime = v.currentTime - 5.0;
-                            if (v.paused) {
-                                v.play();
-                            }
-                        }
-                    } else if (window.currentLink && (img || !v || (v && v.paused && v.currentTime == 0))) {
-                        const prev = findNextPrevLink(window.currentLink, REGEX_TYPE_CAN_PREVIEW, true);
-                        if (prev) {
-                            onLinkClicked(prev);
-                        }
-                    }
+                    jumpPrevious(v, img);
                     break;
                 case 32: // Space
                     if(e.which == 32){
@@ -600,22 +588,7 @@ def generate_gallery_html(html_data, args:object):
                     }
                     break;
                 case 39: // Right
-                    if (v && e.which != 32){
-                        if (!v.paused) {
-                            v.pause();
-                            v.currentTime = v.currentTime + 5.0;
-                            if (v.paused) {
-                                v.play();
-                            }
-                        }
-                    }
-                    if (window.currentLink && (img || !v || (v && v.ended)) ) {
-                        const next = findNextPrevLink(window.currentLink, REGEX_TYPE_CAN_PREVIEW);
-                        if (next) {
-                            onLinkClicked(next);
-                        }
-                    }
-
+                    jumpNext(v, img);
                     break;
                 case 70: // f-key
                     if (!(e.shiftKey || e.ctrlKey || e.altKey || e.metaKey)) {
@@ -876,8 +849,67 @@ function onLinkClicked(link, evt) {
 		event.stopImmediatePropagation();
 		document.location.href = `${link.href}${window.location.search}`;
 	}
-
 }
+
+function jumpPrevious(v, img) {
+    if (v){
+        if (!v.paused) {
+            v.pause();
+            v.currentTime = v.currentTime - 5.0;
+            if (v.paused) {
+                v.play();
+            }
+        }
+    } else if (window.currentLink && (img || !v || (v && v.paused && v.currentTime == 0))) {
+        const prev = findNextPrevLink(window.currentLink, REGEX_TYPE_CAN_PREVIEW, true);
+        if (prev) {
+            onLinkClicked(prev);
+        }
+}
+}
+
+function jumpNext(v, img) {
+    if (v && e.which != 32){
+        if (!v.paused) {
+            v.pause();
+            v.currentTime = v.currentTime + 5.0;
+            if (v.paused) {
+                v.play();
+            }
+        }
+    }
+    if (window.currentLink && (img || !v || (v && v.ended)) ) {
+        const next = findNextPrevLink(window.currentLink, REGEX_TYPE_CAN_PREVIEW);
+        if (next) {
+            onLinkClicked(next);
+        }
+    }
+}
+
+
+window.tStartX = 0;
+window.tEndX = 0;
+    
+function checkDirection() {
+  if (tEndX < tStartX) {
+    jumpPrevious(document.querySelector('.popup video'), document.querySelector('.popup img'));
+    console.log('swiped left!');
+  }
+  if (tEndX > tStartX) {
+    jumpNext(document.querySelector('.popup video'), document.querySelector('.popup img'));
+    console.log('swiped right!');
+  }
+}
+
+document.addEventListener('touchstart', e => {
+  tStartX = e.changedTouches[0].screenX
+})
+
+document.addEventListener('touchend', e => {
+  tEndX = e.changedTouches[0].screenX
+  checkDirection()
+})
+
 document.onclick = onDocumentClickHandler;                
         </script>
     </head>
@@ -1012,8 +1044,6 @@ Press Enter to ignore and use full size images for gallery previews or CTR-C to 
     thumbnails_dir = Path.expanduser(args.thumbs_dir)
     thumbnails_dir.mkdir(exist_ok=True)
 
-    # root_dir = args.gallery_root  # Use 1st arg or current directory as root
-    # base_dir: Path = Path(root_dir).absolute()
     print(f'Collecting media in: {args.gallery_root.absolute()}')
     asset_list: list[Asset] = collect_media_assets(args)
 
