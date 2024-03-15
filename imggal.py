@@ -326,7 +326,7 @@ def generate_gallery_html(html_data, args:object):
         }
         #maine {
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(20em, 1fr)); 
+            grid-template-columns: repeat(auto-fill, minmax(11em, 1fr)); 
             gap: 6px;
         }
         .item {
@@ -347,10 +347,7 @@ def generate_gallery_html(html_data, args:object):
 
         }
         .item>img, .item>video {
-            /*
-            max-width: 20em;
-            */
-            max-width: 100%;
+            width: 100%;
             height: auto;
             display: table-cell;
             border-radius: 5px;
@@ -964,7 +961,7 @@ if __name__ == "__main__":
     parser.add_argument('--output-file', '-o',
                         metavar='output_file',
                         default=OUTPUT_FILE_NAME,
-                        help='Output filename')
+                        help=f'Output filename, by default {OUTPUT_FILE_NAME}')
     parser.add_argument('--videos', '-m',
                         default=False,
                         action='store_true',
