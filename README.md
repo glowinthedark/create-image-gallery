@@ -1,5 +1,16 @@
 # create-image-gallery
 
+Python script for creating a static HTML image gallery. 
+
+Uses `imagemagic` for thumbnail generation and Python Pillow for EXIF data extraction.
+
+## Requirements
+
+- python 3.12 (required for `pathlib.Path.relative_to(.., walk_up=True)`)
+- optional: imagemagick — `apt install imagemagick`
+- optional: Pillow — `pip3 install pillow`
+- optional: Pillow HEIF - `pip3 install pillow-heif`
+
 ```bash
 imggal.py -h
 usage: imggal9.py [-h] [--output-file output_file] [--videos] [--video-preload] [--thumbs-dir THUMBS_DIR] [--no-thumbnails]
