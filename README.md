@@ -2,7 +2,7 @@
 
 Python script for creating a static HTML image gallery. 
 
-Uses `imagemagic` for thumbnail generation and Python Pillow for EXIF data extraction.
+Uses `imagemagick` for thumbnail generation and Python Pillow for EXIF data extraction.
 
 ## Requirements
 
