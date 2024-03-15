@@ -2,7 +2,7 @@
 
 # DEPENDENCIES:
 
-# !!! IMPORTANT: MUST USE python3.12 of later!!!
+# !!! REQUIRED: python3.12 of later!!!
 
 # install python 3.12 on ubuntu:
 #     sudo add-apt-repository ppa:deadsnakes/ppa
@@ -285,7 +285,7 @@ def collect_media_assets(args) -> list[Asset]:
                                         created_date=created_date,
                                         html=markup))
 
-                elif asset_path.suffix.lower() in AUDIO_EXTENSIONS:
+                elif args.audios and asset_path.suffix.lower() in AUDIO_EXTENSIONS:
                     assets.append(Asset(type='audio',
                                         relpath=relative_path,
                                         abspath=asset_path,
@@ -998,6 +998,10 @@ if __name__ == "__main__":
                         default=False,
                         action='store_true',
                         help='Include videos. !!!WARNING: increases page load time!')
+    parser.add_argument('--audios', '-a',
+                        default=False,
+                        action='store_true',
+                        help='Include audios.')
     parser.add_argument('--video-preload',
                         default=False,
                         action='store_true',
