@@ -954,7 +954,7 @@ if __name__ == "__main__":
 
     import argparse
 
-    parser = argparse.ArgumentParser(description='Music gallery Generator')
+    parser = argparse.ArgumentParser(description='Image gallery Generator')
     parser.add_argument('gallery_root',
                         help='Gallery root, by default current folder',
                         nargs='?',
