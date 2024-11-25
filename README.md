@@ -14,7 +14,7 @@ Uses `imagemagick` for thumbnail generation and Python Pillow for EXIF data extr
 ## Usage
 ```bash
 imggal.py -h
-usage: imggal9.py [-h] [--output-file output_file] [--videos] [--video-preload] [--thumbs-dir THUMBS_DIR] [--no-thumbnails]
+usage: imggal.py [-h] [--output-file output_file] [--videos] [--video-preload] [--thumbs-dir THUMBS_DIR] [--no-thumbnails]
                   [--ignored [ignore ...]] [--num-workers NUM_WORKERS] [--verbose]
                   [gallery_root]
 
