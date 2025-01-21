@@ -106,6 +106,7 @@ jobs:
           	--macos-create-app-bundle \
           	--macos-signed-app-name="$APPNAME" \
           	--macos-app-name="$APPNAME" \
+            --macos-app-icon=icon.icns \
           	--nofollow-import-to=tkinter \
             --nofollow-import-to=pyglossary.ui.ui_gtk \
           	--nofollow-import-to=pyglossary.ui.ui_gtk4 \
