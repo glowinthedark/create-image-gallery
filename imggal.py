@@ -4,13 +4,6 @@
 
 # !!! REQUIRED: python3.12 of later!!!
 
-# install python 3.12 on ubuntu:
-#     sudo add-apt-repository ppa:deadsnakes/ppa
-#     sudo apt install python3.12
-#
-# install python 3.12 on macos:
-#     brew install python@3.12
-
 # OPTIONAL DEPENDENCES
 # imagemagick (for thumbnail generation):
 #     ubunbtu/debian: sudo apt install imagemagick
@@ -1053,7 +1046,7 @@ if __name__ == "__main__":
     parser.add_argument('--thumbs-dir', '-t',
                         type=Path,
                         default=Path(THUMBS_DIR),
-                        help=f'Thumbnails folder, by default (%(default)s)')
+                        help='Thumbnails folder, by default (%(default)s)')
     parser.add_argument('--no-thumbnails',
                         default=False,
                         action='store_true',
@@ -1067,7 +1060,7 @@ if __name__ == "__main__":
     parser.add_argument('--num-workers', '-n',
                         type=int,
                         default=MAX_THUMBNAIL_GENERATION_WORKERS,
-                        help=f'''Maximum number of parallel threads for thumbnail generation, DEFAULT: (%(default)s)''')
+                        help='''Maximum number of parallel threads for thumbnail generation, DEFAULT: (%(default)s)''')
     parser.add_argument('--verbose', '-v',
                         help='Verbose output (%(default)s)',
                         default=False,
