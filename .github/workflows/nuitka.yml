@@ -31,13 +31,13 @@ jobs:
       fail-fast: false
     steps:
       - uses: actions/checkout@v4
-        # with:
-        #   submodules: true
-        #   # Number of commits to fetch, ootb only 1 commit
-        #   # 0 = all history for all branches and tags. (needed for git describe)
-        #   fetch-depth: 0
-        #   fetch-tags: true
-        #   # ref: master
+        with:
+          # submodules: true
+          # Number of commits to fetch, ootb only 1 commit
+          # 0 = all history for all branches and tags. (needed for git describe)
+          fetch-depth: 0
+          fetch-tags: true
+          ref: master
           
       # - name: Update brew
       #   run: |
@@ -80,7 +80,14 @@ jobs:
       #     python3 -m pip install --break-system-packages nuitka
       #     which -a nuitka
       #     nuitka --version
-        
+      
+      - name: set vars
+        id: envconf
+        run: |
+
+          echo "VERSION=$(git describe --abbrev=0)" >> $GITHUB_ENV
+          echo "TAG=$(git describe)" >> $GITHUB_ENV        
+          
       - name: nuitka build
         run: |
           python3 -m venv .venv
@@ -124,7 +131,8 @@ jobs:
       - name: Create DMG
         if: true
         run: |
-          create-dmg --volname "${{ env.APPNAME }}-${{env.VERSION}}" --volicon res/pyglossary.icns --eula LICENSE  --app-drop-link 50 50 "${{env.APPNAME}}-${{ matrix.os }}-${{ env.TAG }}.dmg" "${{ env.DIST_DIR }}/${{ env.APPNAME }}.app"
+          curl https://raw.githubusercontent.com/tauri-apps/tauri/refs/heads/dev/crates/tauri-bundler/src/bundle/macos/dmg/bundle_dmg -O
+          bash bundle_dmg --skip-jenkins --volname "${{ env.APPNAME }}-${{env.VERSION}}" --volicon icon.icns --eula LICENSE --app-drop-link 50 50 "${{env.APPNAME}}-${{ matrix.os }}-${{ env.TAG }}.dmg" "${{ env.DIST_DIR }}/${{ env.APPNAME }}.app"
 
       - name: Upload Artifacts DMG
         if: true
