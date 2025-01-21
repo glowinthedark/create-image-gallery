@@ -132,8 +132,7 @@ jobs:
       - name: Create DMG
         if: true
         run: |
-          curl https://raw.githubusercontent.com/tauri-apps/tauri/refs/heads/dev/crates/tauri-bundler/src/bundle/macos/dmg/bundle_dmg -O
-          bash bundle_dmg --skip-jenkins --volname "${{ env.APPNAME }}-${{env.VERSION}}" --volicon icon.icns --app-drop-link 50 50 "${{env.APPNAME}}-${{ matrix.os }}-${{ env.TAG }}.dmg" "${{ env.DIST_DIR }}/${{ env.APPNAME }}.app"
+          bash ./bundle_dmg --skip-jenkins --volname "${{ env.APPNAME }}-${{env.VERSION}}" --volicon icon.icns --app-drop-link 50 50 "${{env.APPNAME}}-${{ matrix.os }}-${{ env.TAG }}.dmg" "${{ env.DIST_DIR }}/${{ env.APPNAME }}.app"
 
       - name: Upload Artifacts DMG
         if: true
