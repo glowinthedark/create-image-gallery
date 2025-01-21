@@ -75,24 +75,57 @@ OUTPUT_FILE_NAME = "gal.html"
 
 IMAGE_SVG = ".svg"
 IMAGE_HEIC = ".heic"
-IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".bmp", ".webp", ".gif", IMAGE_HEIC)
-VIDEO_EXTENSIONS = (".mp4", ".mkv", ".webm", ".3gp", ".mov", ".mkv", ".ogv", ".mpg", ".mpeg")
+IMAGE_EXTENSIONS = (".jpg", ".jpeg", IMAGE_HEIC)
+# IMAGE_EXTENSIONS = (".jpg", ".jpeg", ".png", ".bmp", ".webp", ".gif", IMAGE_HEIC)
+VIDEO_EXTENSIONS = ('.mp4', '.mov', '.mkv')
+# AUDIO_EXTENSIONS = ()
+# VIDEO_EXTENSIONS = (".mp4", ".mkv", ".webm", ".3gp", ".mov", ".mkv", ".ogv", ".mpg", ".mpeg")
 AUDIO_EXTENSIONS = (".mp3", ".ogg", ".wav", ".flac", ".m4a", ".aac")
 
 ASSET_EXTENSIONS = IMAGE_EXTENSIONS + VIDEO_EXTENSIONS + AUDIO_EXTENSIONS
 
 # literal lowercase path segments to ignore (matches intermediate folders too)
-IGNORED_PATHS = (
-    'drawable/',
-    '_thumb',
+IGNORED_PATHS = [
+    'cordova',
+    'drawable',
+    'sqlite/assets',
+    'pydictionary-pyvoctr/trunk/pydictionary/pyvoctrainr/img',
+    'BraveSoftware/Brave',
+    'colorbreathing',
+    'PaulsRobot',
+    'lear-taiwanese-mandarin',
+    'Thumbnails',
+    'iCloud~com~apple~iBooks',
     '.DS_Store',
-    '.thumb',
-    'tests/',
-    'cache/',
+    'site-packages',
+    'assets/icons',
+    'allsetlearning',
+    'goldendict_data',
+    'Accupunture/accupunct',
+    'Calibre Library',
+    'Accupunture/moa',
+    'pyvoctrainer',
+    'moa5',
+    'davx5',
+    'deadbeef',
+    'mamcom',
+    'renditions',
+    '_thumb',
     '.config',
-)
+    '.thumb',
+    'dictionary/Contents',
+    '/tests/',
+    'zerotohero',
+    'panlang',
+    'cache/',
+    '/projects/python',
+    '/Library/Application/',
+    '/ubs/',
+    '/ubs-'
+]
 
-image_magick_path = shutil.which('convert') # requires at least python 3.3
+graphics_magick_path = shutil.which('gm')
+image_magick_path = shutil.which('convert')  # requires at least python 3.3
 total_assets = 0
 
 class Asset:
@@ -202,6 +235,7 @@ def collect_media_assets(args) -> list[Asset]:
 
         try:
             if asset_path.is_file() and asset_path.suffix.lower() in ASSET_EXTENSIONS:
+
                 if asset_path.name.startswith('._'):  # skip macos junk
                     continue
 
@@ -246,7 +280,7 @@ def collect_media_assets(args) -> list[Asset]:
                     segment = str(args.gallery_root.absolute()).replace(str(homedir), '').lstrip('/')
 
                     # only generate thumbnails if file size is bigger than 50KB and imagemagick is installed
-                    if not args.no_thumbnails and image_magick_path and size >= THUMBNAIL_GENERATION_MINIMUM_FILE_SIZE:
+                    if not args.no_thumbnails and (image_magick_path or graphics_magick_path) and size >= THUMBNAIL_GENERATION_MINIMUM_FILE_SIZE:
                         thumbnail_path: Path = Path.expanduser(args.thumbs_dir).absolute() / segment / relative_path
 
                         if asset_path.suffix.lower() == IMAGE_HEIC:
@@ -295,7 +329,7 @@ def collect_media_assets(args) -> list[Asset]:
                     </a>"""))
 
                 if args.verbose:
-                print(f'{asset_path}')
+                    print(f'{asset_path}')
                 total_assets += 1
 
                 if total_assets % 42:
@@ -345,11 +379,11 @@ def generate_gallery_html(html_data, args:object):
             border-style: solid;
             border-color: white;
             box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, .2), 0px 1px 1px 0px rgba(0, 0, 0, .14), 0px 1px 3px 0px rgba(0, 0, 0, .12);
-
         }
         .item>img, .item>video {
             width: 100%;
             height: auto;
+            max-height: 350px;
             display: table-cell;
             border-radius: 5px;
             object-fit: cover;
@@ -565,12 +599,12 @@ def generate_gallery_html(html_data, args:object):
         }
         </style>
         <script>
-        	document.onkeydown = function (e) {
+            document.onkeydown = function (e) {
             const v = document.querySelector('.popup video');
             const img = document.querySelector('.popup img');
 
             switch (e.which) {
-                case 27:	// = Escape
+                case 27:    // = Escape
                     hideModal();
                     break;
                 case 37: // left
@@ -656,19 +690,19 @@ const REGEX_TYPE_MARKDOWN = /\.(md)$/i;
 const REGEX_TYPE_CAN_PREVIEW = /\.(mp4|m4v|avi|mov|mpg|mpeg|ogv|ogm|opus|mkv|md|html?|gif|jpe?g|a?png|tiff?|bmp|webp|ico|wmf|avif|svg|asp|txt|memo|kt|go|ics|rst?|rb|dart|php|js|tsx?|py|cue|ipynb|z?sh|xml|plist|bat|css|json|java|c|cpp|h|m|hpp|conf|ini|pl|yaml|yml|groovy|swift|properties|gradle|srt|sql|lua|m3u8?)$/i;
 
 function escapeRegex(string) {
-	return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
+    return string.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');
 }
 
 function showModal (popup, popupThemeClass) {
-	window.lastScrollOffset = window.pageYOffset;
-	document.body.classList.add('modal-open');
-	document.body.style.top = `-${window.lastScrollOffsetllY}px`;
+    window.lastScrollOffset = window.pageYOffset;
+    document.body.classList.add('modal-open');
+    document.body.style.top = `-${window.lastScrollOffsetllY}px`;
 
-	var popup = popup || document.querySelector('#popup1');
-	popup.style.display = 'block';
+    var popup = popup || document.querySelector('#popup1');
+    popup.style.display = 'block';
 
-	popup.classList.remove(popupThemeClass === 'day' ? 'night' : 'day');
-	popup.classList.add(popupThemeClass);
+    popup.classList.remove(popupThemeClass === 'day' ? 'night' : 'day');
+    popup.classList.add(popupThemeClass);
 }
 
 function hideModal (e) {
@@ -676,30 +710,30 @@ function hideModal (e) {
         e.stopImmediatePropagation();
         e.preventDefault();
     }
-	var popup = document.querySelector('#popup1');
+    var popup = document.querySelector('#popup1');
 
-	if (popup.style.display !== 'none') {
-		popup.style.display = 'none';
-		popup.querySelector('.content').innerHTML = '';
+    if (popup.style.display !== 'none') {
+        popup.style.display = 'none';
+        popup.querySelector('.content').innerHTML = '';
 
-		document.body.classList.remove('modal-open');
+        document.body.classList.remove('modal-open');
 
-		if (window.lastScrollOffset){
-			window.scrollTo(0, window.lastScrollOffset);
-		}
-	}
+        if (window.lastScrollOffset){
+            window.scrollTo(0, window.lastScrollOffset);
+        }
+    }
 }
 function toggleRestoreModal (popup) {
-	var popup = popup || document.querySelector('#popup1');
-	if (popup.style.display !== 'none') {
-		popup.querySelector('.popup').classList.toggle('maximized');
-	}
+    var popup = popup || document.querySelector('#popup1');
+    if (popup.style.display !== 'none') {
+        popup.querySelector('.popup').classList.toggle('maximized');
+    }
 }
 
 function onAudioEnded(el) {
-	if (el && window.currentLink) {
-		window.currentLink.classList.remove('nowPlaying');
-		let nextLink = findNextPrevLink(window.currentLink, REGEX_TYPE_AUDIO);
+    if (el && window.currentLink) {
+        window.currentLink.classList.remove('nowPlaying');
+        let nextLink = findNextPrevLink(window.currentLink, REGEX_TYPE_AUDIO);
         const href = nextLink.getAttribute('href');
 
         if (REGEX_TYPE_AUDIO.test(href)) {
@@ -712,143 +746,143 @@ function onAudioEnded(el) {
                     behavior: "smooth",
                     block: "center"
                 }
-                );
+            );
             window.currentLink = nextLink;
-		}
-	}
+        }
+    }
 }
 
 function startAudioPlayer(href) {
-	const audioPlayer = document.getElementById('aplayer');
-		audioPlayer.parentElement.style.display = 'block';
-		audioPlayer.src = href;
-		audioPlayer.title = decodeURIComponent(href);
-		audioPlayer.play();
-		document.querySelectorAll('th').forEach((th) => th.classList.toggle('offset'));
+    const audioPlayer = document.getElementById('aplayer');
+        audioPlayer.parentElement.style.display = 'block';
+        audioPlayer.src = href;
+        audioPlayer.title = decodeURIComponent(href);
+        audioPlayer.play();
+        document.querySelectorAll('th').forEach((th) => th.classList.toggle('offset'));
 }
 
 function hideAudioPlayer() {
-	const audioPlayer = document.getElementById('aplayer');
-	audioPlayer.pause();
-	audioPlayer.parentElement.style.display = 'none';
-	document.querySelectorAll('th').forEach((th) => th.classList.toggle('offset'));
+    const audioPlayer = document.getElementById('aplayer');
+    audioPlayer.pause();
+    audioPlayer.parentElement.style.display = 'none';
+    document.querySelectorAll('th').forEach((th) => th.classList.toggle('offset'));
 
-	if (window.currentLink) {
-		window.currentLink.classList.remove('nowPlaying');
-	}
+    if (window.currentLink) {
+        window.currentLink.classList.remove('nowPlaying');
+    }
 }
 
 function onLinkClicked(link, evt) {
-	var href = link.getAttribute("href");
+    var href = link.getAttribute("href");
 
-	if (href == '#') {
-	    return;
-	}
+    if (href == '#') {
+        return;
+    }
 
-	if (window.currentLink && REGEX_TYPE_AUDIO.test(href)) {
-		window.currentLink.classList.remove('nowPlaying');
-	}
-	window.currentLink = link;
+    if (window.currentLink && REGEX_TYPE_AUDIO.test(href)) {
+        window.currentLink.classList.remove('nowPlaying');
+    }
+    window.currentLink = link;
 
-	const event = evt || new Event('click');
+    const event = evt || new Event('click');
 
-	const fileName = href.split('/').pop();
-	const baseName = fileName.split('.')[0];
+    const fileName = href.split('/').pop();
+    const baseName = fileName.split('.')[0];
 
-	var popup = document.querySelector('#popup1');
-	var content = popup.querySelector('.content');
-	popup.querySelector('.info').textContent = decodeURIComponent(fileName);
+    var popup = document.querySelector('#popup1');
+    var content = popup.querySelector('.content');
+    popup.querySelector('.info').textContent = decodeURIComponent(fileName);
 
-	if (REGEX_TYPE_VIDEO.test(href)) {
-		event.preventDefault();
-		event.stopImmediatePropagation();
+    if (REGEX_TYPE_VIDEO.test(href)) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
 
-		hideAudioPlayer();
-
+        hideAudioPlayer();
+        
         if (link.firstElementChild && !link.firstElementChild.paused) {
             link.firstElementChild.pause();
         }
 
-		const video = document.createElement('video');
-		video.setAttribute('autoplay', true);
-		video.setAttribute('controls', 'controls');
-		video.setAttribute('preload', 'auto');
-		video.setAttribute('tabIndex', "-1");
+        const video = document.createElement('video');
+        video.setAttribute('autoplay', true);
+        video.setAttribute('controls', 'controls');
+        video.setAttribute('preload', 'auto');
+        video.setAttribute('tabIndex', "-1");
 
-		const source = document.createElement('source');
+        const source = document.createElement('source');
 
-		source.src = href;
-		video.appendChild(source);
+        source.src = href;
+        video.appendChild(source);
 
-		document.querySelectorAll('a').forEach((link) => {
-			if (new RegExp(`${baseName}\.?.*\.(vtt|srt)`, 'i').test(link.href)) {
-				const track = document.createElement('track');
-				loadSubtitle(link.href)
-					.then(url => {
-						track.src = url;
-						track.kind = 'subtitles';
-						track.label = decodeURIComponent(link.href.split('/').pop());
-						track.srclang = 'en';
+        document.querySelectorAll('a').forEach((link) => {
+            if (new RegExp(`${baseName}\.?.*\.(vtt|srt)`, 'i').test(link.href)) {
+                const track = document.createElement('track');
+                loadSubtitle(link.href)
+                    .then(url => {
+                        track.src = url;
+                        track.kind = 'subtitles';
+                        track.label = decodeURIComponent(link.href.split('/').pop());
+                        track.srclang = 'en';
 
-						if (!video.hasDefaultSubs) {
-							track.default = true;
-							video.hasDefaultSubs = true;
-						}
+                        if (!video.hasDefaultSubs) {
+                            track.default = true;
+                            video.hasDefaultSubs = true;
+                        }
 
-						video.appendChild(track);
-					})
-			}
-		});
+                        video.appendChild(track);
+                    })
+            }
+        });
 
-		content.innerHTML = '';
-		content.appendChild(video);
-		showModal(popup, 'night');
+        content.innerHTML = '';
+        content.appendChild(video);
+        showModal(popup, 'night');
 
-	}else if (REGEX_TYPE_AUDIO.test(href)) {
-		event.preventDefault();
-		event.stopImmediatePropagation();
+    } else if (REGEX_TYPE_AUDIO.test(href)) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
 
-		startAudioPlayer(href);
-		link.classList.add('nowPlaying');
-	}
-	// special treatment by extension
-	else if (REGEX_TYPE_MARKDOWN.test(href) || REGEX_TYPE_CODE.test(href)) {
-		event.preventDefault();
-		event.stopImmediatePropagation();
-		fetch(href)
-			.then(function (response) {
-				if (response.ok) {
-					return response.text();
-				} else {
-					throw new Error(response.statusText);
-				}
-			})
-			.then(function (text) {
+        startAudioPlayer(href);
+        link.classList.add('nowPlaying');
+    }
+    // special treatment by extension
+    else if (REGEX_TYPE_MARKDOWN.test(href) || REGEX_TYPE_CODE.test(href)) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        fetch(href)
+            .then(function (response) {
+                if (response.ok) {
+                    return response.text();
+                } else {
+                    throw new Error(response.statusText);
+                }
+            })
+            .then(function (text) {
 
-				showModal(popup, 'day');
-				var content = popup.querySelector('.content');
-				// Check if the window has marked library
-				if (href.match(REGEX_TYPE_MARKDOWN) && window.marked) {
-					// Parse the markdown text as HTML and set it as the popup innerHTML
-					content.innerHTML = marked.parse(text);
-				} else {
-					content.innerHTML = `<pre><code>${text}</code></pre>`;
-					window.hljs ? window.hljs.highlightAll() : console.error('nohljs!')
-				}
-			})
-			.catch(function (error) {
-				console.error(error);
-			});
-	} else if (REGEX_TYPE_IMAGE.test(href)) {
-		event.preventDefault();
-		event.stopImmediatePropagation();
-		content.innerHTML = `<img src="${href}">`;
-		showModal(popup, 'night');
-	} else if (window.location.search && !link.href.includes(window.location.search)) { // regular click
-		event.preventDefault();
-		event.stopImmediatePropagation();
-		document.location.href = `${link.href}${window.location.search}`;
-	}
+                showModal(popup, 'day');
+                var content = popup.querySelector('.content');
+                // Check if the window has marked library
+                if (href.match(REGEX_TYPE_MARKDOWN) && window.marked) {
+                    // Parse the markdown text as HTML and set it as the popup innerHTML
+                    content.innerHTML = marked.parse(text);
+                } else {
+                    content.innerHTML = `<pre><code>${text}</code></pre>`;
+                    window.hljs ? window.hljs.highlightAll() : console.error('nohljs!')
+                }
+            })
+            .catch(function (error) {
+                console.error(error);
+            });
+    } else if (REGEX_TYPE_IMAGE.test(href)) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        content.innerHTML = `<img src="${href}">`;
+        showModal(popup, 'night');
+    } else if (window.location.search && !link.href.includes(window.location.search)) { // regular click
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        document.location.href = `${link.href}${window.location.search}`;
+    }
 }
 
 function jumpPrevious(v, img) {
@@ -865,7 +899,7 @@ function jumpPrevious(v, img) {
         if (prev) {
             onLinkClicked(prev);
         }
-}
+    }
 }
 
 function jumpNext(v, img) {
@@ -910,26 +944,27 @@ document.addEventListener('touchend', e => {
   checkDirection()
 })
 
-document.onclick = onDocumentClickHandler;                
+document.onclick = onDocumentClickHandler;
+
         </script>
     </head>
     <body>
         <div class="fixedplayer">
-			<audio controls id="aplayer" src="" onended="onAudioEnded(this)"></audio><a href="#" onclick="hideAudioPlayer(); return false;">&times;</a>
+            <audio controls id="aplayer" src="" onended="onAudioEnded(this)"></audio><a href="#" onclick="hideAudioPlayer(); return false;">&times;</a>
         </div>'''
                    f'''<h1><a href="..">..</a>{args.gallery_root.absolute()}</h1>
         <div id="maine">'''
                    + html_data
                    + '''</div>
-		<div id="popup1" class="overlay">
-			<div class="popup">
-				<h2 class="info"></h2>
-				<a class="max" onclick="toggleRestoreModal()" href="#">&#x26F6;</a>
-				<a class="close" onclick="hideModal(event)" href="#">&times;</a>
-				<div class="content">
-				</div>
-			</div>
-		</div>
+        <div id="popup1" class="overlay">
+            <div class="popup">
+                <h2 class="info"></h2>
+                <a class="max" onclick="toggleRestoreModal()" href="#">&#x26F6;</a>
+                <a class="close" onclick="hideModal(event)" href="#">&times;</a>
+                <div class="content">
+                </div>
+            </div>
+        </div>
     </body>
 </html>
 ''')
@@ -955,12 +990,21 @@ def make_thumbnail(asset: Asset, basedir: Path):
         print(f'⚡️\tSKIP existing thumbnail: {asset.thumbnail.absolute()}')
         return
 
-    # TODO: make sure the path to `convert` is valid
-    args = [image_magick_path,
-        str(asset.abspath),
-        "-strip",
-        "-quality", "60",
-        "-thumbnail", "300x"]
+    if graphics_magick_path:
+        args = [graphics_magick_path,
+            'convert',
+            str(asset.abspath),
+            "-strip",
+            "-quality", "60",
+            "-thumbnail", "300x"]
+    elif image_magick_path:
+        args = [image_magick_path,
+            str(asset.abspath),
+            "-strip",
+            "-quality", "60",
+            "-thumbnail", "300x"]
+    else:
+        raise 'Need either graphicsmagick or imagemagick!'
 
     if asset.abspath.suffix == '.heic':
         args += ['-format', 'jpg']
@@ -993,11 +1037,11 @@ if __name__ == "__main__":
     parser.add_argument('--output-file', '-o',
                         metavar='output_file',
                         default=OUTPUT_FILE_NAME,
-                        help=f'Output filename, by default {OUTPUT_FILE_NAME}')
+                        help='Output filename, by default (%(default)s)')
     parser.add_argument('--videos', '-m',
                         default=False,
                         action='store_true',
-                        help='Include videos. !!!WARNING: increases page load time!')
+                        help='Include videos. !!!WARNING: increases page load time! (%(default)s)')
     parser.add_argument('--audios', '-a',
                         default=False,
                         action='store_true',
@@ -1005,40 +1049,40 @@ if __name__ == "__main__":
     parser.add_argument('--video-preload',
                         default=False,
                         action='store_true',
-                        help='Preload 1st frame for videos. !!!WARNING: increases page load time!')
+                        help='Preload 1st frame for videos. !!!WARNING: increases page load time! (%(default)s)')
     parser.add_argument('--thumbs-dir', '-t',
                         type=Path,
                         default=Path(THUMBS_DIR),
-                        help=f'Thumbnails folder, by default {THUMBS_DIR}')
+                        help=f'Thumbnails folder, by default (%(default)s)')
     parser.add_argument('--no-thumbnails',
                         default=False,
                         action='store_true',
-                        help='Use full size image and DO NOT generate image thumbnails using imagemagick')
+                        help='Use full size image and DO NOT generate image thumbnails using imagemagick (%(default)s)')
     parser.add_argument('--ignored', '-i',
                         nargs='*',
                         metavar='ignore',
                         default=[],
                         help='''Custom ignored path segments.
-                        Accepts multiple segments, e.g. -i junk1 junk2 junk3 "%s"''' % [])
+                        Accepts multiple segments, e.g. -i junk1 junk2 junk3 (%(default)s)''')
     parser.add_argument('--num-workers', '-n',
                         type=int,
                         default=MAX_THUMBNAIL_GENERATION_WORKERS,
-                        help=f'''Maximum number of parallel threads for thumbnail generation, DEFAULT: {MAX_THUMBNAIL_GENERATION_WORKERS}''')
+                        help=f'''Maximum number of parallel threads for thumbnail generation, DEFAULT: (%(default)s)''')
     parser.add_argument('--verbose', '-v',
-                        help='Verbose output',
+                        help='Verbose output (%(default)s)',
                         default=False,
                         action='store_true')
 
     args = parser.parse_args(sys.argv[1:])
 
     if not args.no_thumbnails:
-    if not image_magick_path or not Path(image_magick_path).exists():
-        print('''❗️ Imagemagick convert not found!".
-To install
-* ubuntu/debian: apt install imagemagick
-* macos: brew install imagemagick
-Press Enter to ignore and use full size images for gallery previews or CTR-C to abort...''')
-        input()
+        if not image_magick_path or not Path(image_magick_path).exists():
+            print('''❗️ Imagemagick convert not found!".
+    To install
+    * ubuntu/debian: apt install imagemagick
+    * macos: brew install imagemagick
+    Press Enter to ignore and use full size images for gallery previews or CTR-C to abort...''')
+            input()
     else:
         image_magick_path = None
 
