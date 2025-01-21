@@ -5,9 +5,16 @@
 # !!! REQUIRED: python3.12 of later!!!
 
 # OPTIONAL DEPENDENCES
-# imagemagick (for thumbnail generation):
-#     ubunbtu/debian: sudo apt install imagemagick
-#     macos: brew install imagemagick
+# graphicsmagick (or imagemagick) - for thumbnail generation:
+#     ubunbtu/debian: 
+#        sudo apt install graphicsmagick
+#        OR
+#        sudo apt install imagemagick
+
+#     macos: 
+#        brew install graphicsmagick
+#     OR:
+#        brew install imagemagick
 #
 # Pillow (for EXIF extraction):
 #     python3.12 -m pip install -U Pillow
