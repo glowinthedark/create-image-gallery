@@ -85,8 +85,8 @@ jobs:
         id: envconf
         run: |
 
-          echo "VERSION=$(git describe --abbrev=0)" >> $GITHUB_ENV
-          echo "TAG=$(git describe)" >> $GITHUB_ENV        
+          echo "VERSION=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
+          echo "TAG=$(git describe --tags)" >> $GITHUB_ENV        
           
       - name: nuitka build
         run: |
