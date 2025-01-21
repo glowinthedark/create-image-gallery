@@ -84,9 +84,10 @@ jobs:
       - name: set vars
         id: envconf
         run: |
-
           echo "VERSION=$(git describe --abbrev=0 --tags)" >> $GITHUB_ENV
-          echo "TAG=$(git describe --tags)" >> $GITHUB_ENV        
+          echo "VERSION=$VERSION"
+          echo "TAG=$(git describe --tags)" >> $GITHUB_ENV
+          echo "TAG=$TAG"
           
       - name: nuitka build
         run: |
