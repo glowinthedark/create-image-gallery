@@ -149,10 +149,39 @@ jobs:
           name: ${{ github.event.repository.name }}-${{ matrix.os }}-${{ github.sha }}
           path: |
             **/*.dmg
+            
+  build_windows_x64:
+    strategy:
+      matrix:
+        python-version:
+          - "3.13"
+        os: [windows-2022]
+        
+    runs-on: ${{ matrix.os }
 
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          ref: master
+          
+      - name: nuitka build
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+          nuitka	--standalone --assume-yes-for-downloads --follow-imports --nofollow-import-to=tkinter --nofollow-import-to=pyglossary.ui.ui_gtk --nofollow-import-to=pyglossary.ui.ui_gtk4 --nofollow-import-to=pyglossary.ui.ui_qt --nofollow-import-to=gi --nofollow-import-to=gtk --nofollow-import-to=pyqt4 --nofollow-import-to=pyqt5 --nofollow-import-to=pyqt6 --nofollow-import-to=*.tests --noinclude-pytest-mode=nofollow --noinclude-setuptools-mode=nofollow --plugin-disable=pyqt5 --noinclude-custom-mode=unittest:nofollow --output-dir="$DIST_DIR" --output-filename=$APPNAME $MAIN_SCRIPT
+    
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}-${{ runner.os }}-${{ runner.arch }}-${{ github.sha }}
+          path: |
+            ${{ env.DIST_DIR }}/**/*
+            
   release:
-    needs: [build_macos]
-    # needs: [build_macos, build-w64]
+    needs: [build_macos, build_windows_x64]
     runs-on: ubuntu-latest
     permissions:
       contents: write    
