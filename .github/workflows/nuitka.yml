@@ -164,19 +164,20 @@ jobs:
           ref: master
           
       - name: nuitka build
+        shell: cmd
         run: |
           python3 -m venv .venv
           .venv\Scripts\activate.bat
           python3 -m pip install nuitka Pillow pillow-heif
-          python3 -m nuitka --standalone --assume-yes-for-downloads --remove-output  --follow-imports --noinclude-setuptools-mode=nofollow --plugin-disable=pyqt5 --output-dir="$DIST_DIR" "$MAIN_SCRIPT"
-          dir /s /b /o:gn
+          python3 -m nuitka --standalone --assume-yes-for-downloads --remove-output --follow-imports --noinclude-setuptools-mode=nofollow --output-dir=dist_imggal imggal.py
+          dir /s
           
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ github.event.repository.name }}-${{ runner.os }}-${{ runner.arch }}-${{ github.sha }}
           path: |
-            ${{ env.DIST_DIR }}/**/*
+            dist_imggal/**/*
             
   release:
     needs: [build_macos, build_windows_x64]
