@@ -107,10 +107,6 @@ jobs:
           	--macos-signed-app-name="$APPNAME" \
           	--macos-app-name="$APPNAME" \
             --macos-app-icon=icon.icns \
-          	--nofollow-import-to=tkinter \
-            --nofollow-import-to=pyglossary.ui.ui_gtk \
-          	--nofollow-import-to=pyglossary.ui.ui_gtk4 \
-          	--nofollow-import-to=pyglossary.ui.ui_qt \
           	--nofollow-import-to=gi \
           	--nofollow-import-to=gtk \
           	--nofollow-import-to=pyqt4 \
@@ -172,8 +168,9 @@ jobs:
           python3 -m venv .venv
           .venv\Scripts\activate.bat
           python3 -m pip install nuitka Pillow pillow-heif
-          python3 -m nuitka --standalone --assume-yes-for-downloads --follow-imports --nofollow-import-to=tkinter --nofollow-import-to=pyglossary.ui.ui_gtk --nofollow-import-to=pyglossary.ui.ui_gtk4 --nofollow-import-to=pyglossary.ui.ui_qt --nofollow-import-to=gi --nofollow-import-to=gtk --nofollow-import-to=pyqt4 --nofollow-import-to=pyqt5 --nofollow-import-to=pyqt6 --nofollow-import-to=*.tests --noinclude-pytest-mode=nofollow --noinclude-setuptools-mode=nofollow --plugin-disable=pyqt5 --noinclude-custom-mode=unittest:nofollow --output-dir="$DIST_DIR" --output-filename=$APPNAME $MAIN_SCRIPT
-    
+          python3 -m nuitka --standalone --assume-yes-for-downloads --remove-output  --follow-imports --noinclude-setuptools-mode=nofollow --plugin-disable=pyqt5 --output-dir="$DIST_DIR" "$MAIN_SCRIPT"
+          dir /s /b /o:gn
+          
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
