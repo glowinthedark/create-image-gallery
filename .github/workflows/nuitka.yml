@@ -170,7 +170,12 @@ jobs:
           .venv\Scripts\activate.bat
           python3 -m pip install nuitka Pillow pillow-heif
           python3 -m nuitka --standalone --assume-yes-for-downloads --follow-imports --nofollow-import-to=tkinter --nofollow-import-to=gi --nofollow-import-to=gtk imggal.py
-          dir /s
+
+      - name: list files
+        shell: bash
+        run: |
+          find . 
+          
           
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
