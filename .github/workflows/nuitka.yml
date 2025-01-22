@@ -171,7 +171,7 @@ jobs:
         run: |
           python3 -m venv .venv
           .venv\Scripts\activate.bat
-          nuitka	--standalone --assume-yes-for-downloads --follow-imports --nofollow-import-to=tkinter --nofollow-import-to=pyglossary.ui.ui_gtk --nofollow-import-to=pyglossary.ui.ui_gtk4 --nofollow-import-to=pyglossary.ui.ui_qt --nofollow-import-to=gi --nofollow-import-to=gtk --nofollow-import-to=pyqt4 --nofollow-import-to=pyqt5 --nofollow-import-to=pyqt6 --nofollow-import-to=*.tests --noinclude-pytest-mode=nofollow --noinclude-setuptools-mode=nofollow --plugin-disable=pyqt5 --noinclude-custom-mode=unittest:nofollow --output-dir="$DIST_DIR" --output-filename=$APPNAME $MAIN_SCRIPT
+          python -m nuitka --standalone --assume-yes-for-downloads --follow-imports --nofollow-import-to=tkinter --nofollow-import-to=pyglossary.ui.ui_gtk --nofollow-import-to=pyglossary.ui.ui_gtk4 --nofollow-import-to=pyglossary.ui.ui_qt --nofollow-import-to=gi --nofollow-import-to=gtk --nofollow-import-to=pyqt4 --nofollow-import-to=pyqt5 --nofollow-import-to=pyqt6 --nofollow-import-to=*.tests --noinclude-pytest-mode=nofollow --noinclude-setuptools-mode=nofollow --plugin-disable=pyqt5 --noinclude-custom-mode=unittest:nofollow --output-dir="$DIST_DIR" --output-filename=$APPNAME $MAIN_SCRIPT
     
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
