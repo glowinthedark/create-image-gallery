@@ -150,7 +150,7 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - "3.13"
+          - "3.12"
         os: [windows-2022]
         
     runs-on: ${{ matrix.os }}
@@ -163,27 +163,46 @@ jobs:
           fetch-tags: true
           ref: master
           
+      - name: Set env vars
+        id: envvars
+        run: |
+          echo "TAG=$(git describe --tags)" >> $GITHUB_ENV
+
+      - name: Verify TAG variable
+        run: |
+          echo "The latest tag is: ${{ env.TAG }}"
+          
       - name: nuitka build
         shell: cmd
         run: |
-          python3 -m venv .venv
+          python -m venv .venv
           .venv\Scripts\activate.bat
-          python3 -m pip install nuitka Pillow pillow-heif
-          python3 -m nuitka --standalone --assume-yes-for-downloads --follow-imports --nofollow-import-to=tkinter --nofollow-import-to=gi --nofollow-import-to=gtk imggal.py
+          python -m pip install nuitka Pillow pillow-heif
+          python -m nuitka --standalone --plugin-enable=dll-files --python-flag=-S --assume-yes-for-downloads --follow-imports imggal.py
 
       - name: list files
         shell: bash
         run: |
           find . 
-          
-          
+
+      - name: Install zip utility
+        run: choco install zip -y
+        shell: powershell
+
+      - name: Verify zip installation
+        run: zip --version
+        shell: cmd
+
+      - name: Zip artifact for deployment
+        run: zip ${{ github.event.repository.name }}-${{ runner.os }}-${{ runner.arch }}.zip ./imggal.dist/* -r
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           if-no-files-found: error
           name: ${{ github.event.repository.name }}-${{ runner.os }}-${{ runner.arch }}-${{ github.sha }}
           path: |
-            imaggal.dist/**/*.*
+            ${{ github.event.repository.name }}-${{ runner.os }}-${{ runner.arch }}.zip
             
   release:
     needs: [build_macos, build_windows_x64]
