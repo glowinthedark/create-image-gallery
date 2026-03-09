@@ -1,8 +1,8 @@
-#!/usr/bin/env python3.12
+#!/usr/bin/env python3
 
 # DEPENDENCIES:
 
-# !!! REQUIRED: python3.12 of later!!!
+# REQUIRED: python3.12 of later
 
 # OPTIONAL DEPENDENCES
 # graphicsmagick (or imagemagick) - for thumbnail generation:
@@ -33,14 +33,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 if sys.version_info[:2] < (3, 12):
-    print('''Python 3.12 or later is required
-install python 3.12 on ubuntu:
-    sudo add-apt-repository ppa:deadsnakes/ppa
-    sudo apt install python3.12
-
-install python 3.12 on macos:
-    brew install python@3.12
-''')
+    print('''Python 3.12 or later is required''')
 
 try:
     from PIL import Image
